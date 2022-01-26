@@ -3,38 +3,29 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { client } from './lib/apolloClient';
+import { ApolloProvider } from "@apollo/client";
 
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  useQuery,
-  gql
-} from "@apollo/client";
-
-const client = new ApolloClient({
-  uri: 'https://api.blocktap.io/graphql',
-  cache: new InMemoryCache()
-});
-
-client
-  .query({
-    query: gql`
-      query GetRates {
-        markets(filter:{ baseSymbol: {_eq:"BTC"} quoteSymbol: {_eq:"EUR"}}) {
-          marketSymbol
-          ticker {
-            lastPrice
-          }
-        }
-      }
-    `
-  })
-  .then(result => console.log(result));
+// client
+//   .query({
+//     query: gql`
+//       query GetRates {
+//         markets(filter:{ baseSymbol: {_eq:"BTC"} quoteSymbol: {_eq:"EUR"}}) {
+//           marketSymbol
+//           ticker {
+//             lastPrice
+//           }
+//         }
+//       }
+//     `
+//   })
+//   .then(result => console.log(result));
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
