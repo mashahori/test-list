@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { Form, List } from '../../components';
-import { useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { GET_RATES } from '../../lib/query';
 import styled from 'styled-components/macro';
 
@@ -27,19 +28,15 @@ const dataMock = [
 ]
 
 export const Main = () => {
-  const [symbol, setSymbol] = useState('');
-  const { loading, error, data } = useQuery(GET_RATES, {
-    variables: {
-      baseSymbol: symbol,
-    }
-  });
+  const [getCurrency, { loading, error, data }] = useLazyQuery(GET_RATES);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
-  const handleSubmit = (symbol) => {
-    setSymbol(symbol);
-    dataMock.push();
+  const handleSubmit = (currency: string) => {
+    getCurrency({ variables: { currency } });
+    // dataMock.push({ marketSymbol: currency, lastPrice: data.markets[0].ticker.lastPrice });
+    console.log(data);
   }
 
   return (
@@ -48,7 +45,7 @@ export const Main = () => {
         <Title>Now you can track all your cryptos here!</Title>
         <Text>Just enter the cryptocurrency code on the form to the right.</Text>
       </div>
-      <Form onSubmit={handleSubmit}/>
+      <Form onSubmit={(currency) => getCurrency({ variables: { currency } })}/>
       <List dataList={dataMock} />
     </Wrapper>
   )

@@ -13,8 +13,9 @@ interface Props {
 
 export const List = ( { dataList }: Props) => (
   <ul>
-    {dataList.map((el) =>(
+    {dataList.map(({ marketSymbol, lastPrice }) =>(
       <ListItem
+        key={marketSymbol}
         secondaryAction={
           <IconButton edge="end" aria-label="delete">
             <DeleteIcon />
@@ -27,8 +28,8 @@ export const List = ( { dataList }: Props) => (
           </Avatar>
         </ListItemAvatar>
         <ListItemText
-          primary="Single-line item"
-          secondary='Secondary text'
+          primary={marketSymbol}
+          secondary={lastPrice}
         />
       </ListItem>
     ))}
