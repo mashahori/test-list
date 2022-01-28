@@ -1,23 +1,19 @@
 import { useState } from 'react';
 import { Form, List } from '../../components';
 import { Wrapper, Title, Text, Box } from './style';
-
-interface IItem {
-  currency: string;
-  price: string;
-}
+import { IItem } from '../../types/types';
 
 export const Main = () => {
   const [list, setList] = useState<IItem[]>([]);
 
-  const handleAddItem = (currency, price) => {
+  const handleAddItem = (currency:string, price: string) => {
+    console.log(currency, price);
     if (!list.find((el) => el.currency === currency)) {
       setList([...list, { currency, price }]);
     }
   }
 
-  const handleDeleteItem = (e, currency) => {
-    console.log(currency);
+  const handleDeleteItem = (e: React.SyntheticEvent, currency: string) => {
     setList(list.filter((el) => el.currency !== currency));
   }
 

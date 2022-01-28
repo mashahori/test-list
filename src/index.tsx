@@ -6,21 +6,6 @@ import reportWebVitals from './reportWebVitals';
 import { client } from './lib/apolloClient';
 import { ApolloProvider } from "@apollo/client";
 
-// client
-//   .query({
-//     query: gql`
-//       query GetRates {
-//         markets(filter:{ baseSymbol: {_eq:"BTC"} quoteSymbol: {_eq:"EUR"}}) {
-//           marketSymbol
-//           ticker {
-//             lastPrice
-//           }
-//         }
-//       }
-//     `
-//   })
-//   .then(result => console.log(result));
-
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
