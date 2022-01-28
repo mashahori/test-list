@@ -1,23 +1,34 @@
+import { useMemo, useState, useEffect } from 'react';
 import { ListItem, ListItemAvatar, IconButton, ListItemText, Avatar } from '@mui/material';
 import { ReactComponent as ItemIcon} from '../../assets/icon.svg';
 import { ReactComponent as DeleteIcon} from '../../assets/deleteIcon.svg';
+import { client } from '../../lib/apolloClient';
+import { GET_RATES } from '../../lib/query';
 
-interface IItem {
-  marketSymbol: string;
-  lastPrice: string;
+interface IProps {
+  currency: string;
+  price: string;
 }
 
-interface Props {
-  dataList: IItem[];
-}
+// interface Props {
+//   dataList: IItem[];
+// }
 
-export const List = ( { dataList }: Props) => (
-  <ul>
-    {dataList.map(({ marketSymbol, lastPrice }) =>(
-      <ListItem
-        key={marketSymbol}
+// const dataMock = [
+//   {
+//     marketSymbol: 'string',
+//     lastPrice: 'string'
+//   }
+// ]
+
+export const List = ({ data, onDelete }) => {
+  return (
+    <ul>
+      {data?.map(({ currency, price }) => (
+        <ListItem
+        key={currency}
         secondaryAction={
-          <IconButton edge="end" aria-label="delete">
+          <IconButton edge="end" aria-label="delete" onClick={(e) => onDelete(e, currency)}>
             <DeleteIcon />
           </IconButton>
         }
@@ -28,10 +39,11 @@ export const List = ( { dataList }: Props) => (
           </Avatar>
         </ListItemAvatar>
         <ListItemText
-          primary={marketSymbol}
-          secondary={lastPrice}
+          primary={currency}
+          secondary={price}
         />
       </ListItem>
-    ))}
-  </ul>
-);
+      ))}
+    </ul>
+  );
+}

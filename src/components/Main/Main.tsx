@@ -1,8 +1,13 @@
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { ListItem, ListItemAvatar, IconButton, ListItemText, Avatar } from '@mui/material';
+import { ReactComponent as ItemIcon} from '../../assets/icon.svg';
+import { ReactComponent as DeleteIcon} from '../../assets/deleteIcon.svg';
 import { Form, List } from '../../components';
 import { useLazyQuery } from "@apollo/client";
 import { GET_RATES } from '../../lib/query';
 import styled from 'styled-components/macro';
+import { client } from '../../lib/apolloClient';
+import { stringify } from 'querystring';
 
 const Wrapper = styled.main`
   padding-top: 100px;
@@ -20,23 +25,26 @@ const Text = styled.p`
   font-size: 40px;
   max-width: 400px;
 `;
-const dataMock = [
-  {
-    marketSymbol: 'string',
-    lastPrice: 'string'
-  }
-]
+
+interface IItem {
+  currency: string;
+  price: string;
+}
+
+
 
 export const Main = () => {
-  const [getCurrency, { loading, error, data }] = useLazyQuery(GET_RATES);
+  const [list, setList] = useState<IItem[]>([]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
+  const handleAddItem = (currency, price) => {
+    if (!list.find((el) => el.currency === currency)) {
+      setList([...list, { currency, price }]);
+    }
+  }
 
-  const handleSubmit = (currency: string) => {
-    getCurrency({ variables: { currency } });
-    // dataMock.push({ marketSymbol: currency, lastPrice: data.markets[0].ticker.lastPrice });
-    console.log(data);
+  const handleDeleteItem = (e, currency) => {
+    console.log(currency);
+    setList(list.filter((el) => el.currency !== currency));
   }
 
   return (
@@ -45,8 +53,8 @@ export const Main = () => {
         <Title>Now you can track all your cryptos here!</Title>
         <Text>Just enter the cryptocurrency code on the form to the right.</Text>
       </div>
-      <Form onSubmit={(currency) => getCurrency({ variables: { currency } })}/>
-      <List dataList={dataMock} />
+      <Form onSubmit={handleAddItem}/>
+      <List data={list} onDelete={handleDeleteItem} />
     </Wrapper>
   )
 };
